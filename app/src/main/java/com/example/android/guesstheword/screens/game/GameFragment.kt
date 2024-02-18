@@ -17,6 +17,7 @@
 package com.example.android.guesstheword.screens.game
 
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,9 +68,11 @@ class GameFragment : Fragment() {
             binding.scoreText.text = newScore.toString()
         })
 
-        // TODO (07) Setup an observer relationship to update binding.timerText
+        // DONE (07) Setup an observer relationship to update binding.timerText
         // You can use DateUtils.formatElapsedTime to correctly format the long to a time string
-
+        viewModel.currentTime.observe(viewLifecycleOwner, Observer {newTime ->
+            binding.timerText.text = DateUtils.formatElapsedTime(newTime).toString()
+        })
         // Sets up event listening to navigate the player when the game is finished
         viewModel.eventGameFinish.observe(viewLifecycleOwner, Observer { isFinished ->
             if (isFinished) {
