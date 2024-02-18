@@ -27,23 +27,26 @@ import androidx.lifecycle.ViewModel
  */
 class GameViewModel : ViewModel() {
 
-    // DONE (01) Copy over the provided companion object with the timer constants
     companion object {
-        // These represent different important times
+        // These represent different important times in the game, such as game length.
+
         // This is when the game is over
-        const val DONE = 0L
+        private const val DONE = 0L
+
         // This is the number of milliseconds in a second
-        const val ONE_SECOND = 1000L
+        private const val ONE_SECOND = 1000L
+
         // This is the total time of the game
-        const val COUNTDOWN_TIME = 60000L
+        private const val COUNTDOWN_TIME = 60000L
+
     }
-    // DONE (02) Create a timer field of type CountDownTimer
-    private val timer :CountDownTimer
-    // DONE (03) Create a properly encapsulated LiveData for the current time called currentTime
-    // Its type should be Long
+
+    private val timer: CountDownTimer
+
     private val _currentTime = MutableLiveData<Long>()
-    val currentTime : LiveData<Long>
+    val currentTime: LiveData<Long>
         get() = _currentTime
+
     // The current word
     private val _word = MutableLiveData<String>()
     val word: LiveData<String>
@@ -64,15 +67,12 @@ class GameViewModel : ViewModel() {
     val eventGameFinish: LiveData<Boolean>
         get() = _eventGameFinish
 
-
     init {
-        _eventGameFinish.value = false
         resetList()
         nextWord()
         _score.value = 0
 
-        // DONE (04) Copy over the CountDownTimer code and then update currentTime and
-        // eventGameFinish appropriately as the timer ticks and finishes
+        // Creates a timer which triggers the end of the game when it finishes
         timer = object : CountDownTimer(COUNTDOWN_TIME, ONE_SECOND) {
 
             override fun onTick(millisUntilFinished: Long) {
@@ -93,27 +93,27 @@ class GameViewModel : ViewModel() {
      */
     private fun resetList() {
         wordList = mutableListOf(
-            "queen",
-            "hospital",
-            "basketball",
-            "cat",
-            "change",
-            "snail",
-            "soup",
-            "calendar",
-            "sad",
-            "desk",
-            "guitar",
-            "home",
-            "railway",
-            "zebra",
-            "jelly",
-            "car",
-            "crow",
-            "trade",
-            "bag",
-            "roll",
-            "bubble"
+                "queen",
+                "hospital",
+                "basketball",
+                "cat",
+                "change",
+                "snail",
+                "soup",
+                "calendar",
+                "sad",
+                "desk",
+                "guitar",
+                "home",
+                "railway",
+                "zebra",
+                "jelly",
+                "car",
+                "crow",
+                "trade",
+                "bag",
+                "roll",
+                "bubble"
         )
         wordList.shuffle()
     }
@@ -127,7 +127,6 @@ class GameViewModel : ViewModel() {
             resetList()
         }
         _word.value = wordList.removeAt(0)
-
     }
 
     /** Methods for buttons presses **/
@@ -148,7 +147,6 @@ class GameViewModel : ViewModel() {
         _eventGameFinish.value = false
     }
 
-    // DONE (06) Cancel the timer in onCleared
     override fun onCleared() {
         super.onCleared()
         timer.cancel()
