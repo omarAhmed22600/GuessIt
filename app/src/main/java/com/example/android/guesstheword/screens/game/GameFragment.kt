@@ -16,11 +16,15 @@
 
 package com.example.android.guesstheword.screens.game
 
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -55,24 +59,13 @@ class GameFragment : Fragment() {
         // Set the viewmodel for databinding - this allows the bound layout access to all of the
         // data in the VieWModel
         binding.gameViewModel = viewModel
-        // TODO (02) Call binding.setLifecycleOwner and pass in "this" fragment to make the
+        binding.lifecycleOwner = viewLifecycleOwner
+        // DONE (02) Call binding.setLifecycleOwner and pass in "this" fragment to make the
         // data binding lifecycle aware
 
-        // TODO (03) Now you can remove the score and word observers - we'll fix
+        // DONE (03) Now you can remove the score and word observers - we'll fix
         // the currentTime observation in the next step
         /** Setting up LiveData observation relationship **/
-        viewModel.word.observe(viewLifecycleOwner, Observer { newWord ->
-            binding.wordText.text = newWord
-        })
-
-        viewModel.score.observe(viewLifecycleOwner, Observer { newScore ->
-            binding.scoreText.text = newScore.toString()
-        })
-
-        viewModel.currentTime.observe(viewLifecycleOwner, Observer { newTime ->
-            binding.timerText.text = DateUtils.formatElapsedTime(newTime)
-
-        })
 
         // Sets up event listening to navigate the player when the game is finished
         viewModel.eventGameFinish.observe(viewLifecycleOwner, Observer { isFinished ->
@@ -83,9 +76,26 @@ class GameFragment : Fragment() {
                 viewModel.onGameFinishComplete()
             }
         })
-
+        viewModel.eventBuzz.observe(viewLifecycleOwner, Observer { buzzType ->
+            if (buzzType != GameViewModel.BuzzType.NO_BUZZ) {
+                buzz(buzzType.pattern)
+                viewModel.onBuzzComplete()
+            }
+        })
         return binding.root
 
+    }
+    private fun buzz(pattern: LongArray) {
+        val buzzer = activity?.getSystemService<Vibrator>()
+
+        buzzer?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                buzzer.vibrate(VibrationEffect.createWaveform(pattern, -1))
+            } else {
+                //deprecated in API 26
+                buzzer.vibrate(pattern, -1)
+            }
+        }
     }
 
 }

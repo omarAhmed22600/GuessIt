@@ -38,32 +38,29 @@ class ScoreFragment : Fragment() {
     private lateinit var viewModelFactory: ScoreViewModelFactory
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         // Inflate view and obtain an instance of the binding class.
         val binding: ScoreFragmentBinding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.score_fragment,
-                container,
-                false
+            inflater,
+            R.layout.score_fragment,
+            container,
+            false
         )
 
         val scoreFragmentArgs by navArgs<ScoreFragmentArgs>()
 
         viewModelFactory = ScoreViewModelFactory(scoreFragmentArgs.score)
         viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(ScoreViewModel::class.java)
+            .get(ScoreViewModel::class.java)
 
         binding.scoreViewModel = viewModel
-        // TODO (05) Call binding.setLifecycleOwner and remove the score observer
-
+        // DONE (05) Call binding.setLifecycleOwner and remove the score observer
+        binding.lifecycleOwner = viewLifecycleOwner
         // Add observer for score
-        viewModel.score.observe(viewLifecycleOwner, Observer { newScore ->
-            binding.scoreText.text = newScore.toString()
-        })
 
         // Navigates back to title when button is pressed
         viewModel.eventPlayAgain.observe(viewLifecycleOwner, Observer { playAgain ->

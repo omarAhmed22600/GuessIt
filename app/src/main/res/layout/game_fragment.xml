@@ -17,7 +17,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
     <data>
 
         <variable
@@ -48,8 +47,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
-        <!-- TODO (01) For score_text and word_text use the LiveData from GameViewModel to set the
-        text attribute -->
+
 
         <TextView
             android:id="@+id/word_text"
@@ -60,6 +58,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/black_text_color"
             android:textSize="34sp"
+            android:text="@{@string/quote_format(gameViewModel.word)}"
             android:textStyle="normal"
             app:layout_constraintBottom_toTopOf="@+id/score_text"
             app:layout_constraintEnd_toEndOf="parent"
@@ -77,6 +76,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="sans-serif"
+            android:text="@{gameViewModel.currentTimeString}"
             android:textColor="@color/grey_text_color"
             android:textSize="14sp"
             android:textStyle="normal"
@@ -92,6 +92,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:fontFamily="sans-serif"
+            android:text="@{@string/score_format(gameViewModel.score)}"
             android:textColor="@color/grey_text_color"
             android:textSize="14sp"
             android:textStyle="normal"
@@ -127,8 +128,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:onClick="@{() -> gameViewModel.onCorrect()}"
             android:text="@string/got_it"
+            android:onClick="@{() -> gameViewModel.onCorrect()}"
             android:theme="@style/GoButton"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
